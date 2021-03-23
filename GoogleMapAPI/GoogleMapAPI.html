@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <style type="text/css">
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+      	width: 1000px;
+        height: 700px;
+        margin: auto;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+      </head>
+  <body style="background-color: orange">
+    <h1 style="
+    color: white;
+    margin-left: 50px;
+    margin-top: 20px;
+    font-family: cursive;
+    font-size: 50px;
+">Web của tôi</h1>
+
+    <div id="map"></div>
+    <script>
+      let map;
+
+      function initMap() {
+      	var mylocation = { lat: 10.843536, lng: 106.795197 };
+        var myUniversity = { lat: 10.845808, lng: 106.794544 };
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: mylocation,
+          zoom: 18,
+        });
+
+        //add marker
+        var marker0 = new google.maps.Marker({
+          position: mylocation,
+          map: map,
+          icon:{
+            url:'login.png',
+            scaledSize:{width:50,height:50}}
+          /*title: 'Kí Túc Xá Trường Đại Học Giao Thông Vận Tải Phân Hiệu Tại Thành Phố Hồ Chí Minh'*/
+          //clickable: true,
+        });
+        var marker1 = new google.maps.Marker({
+          position: myUniversity,
+          map: map,
+          title: "Trường Đại Học Giao Thông Vận Tải Phân Hiệu Tại Thành Phố Hồ Chí Minh",
+          animation: google.maps.Animation.BOUNCE,
+          //clickable: true,
+         
+          icon:{
+            url:'logoTruong.png',
+            scaledSize:{width:50,height:50}
+          }
+        });
+
+        // tao info
+            var infoMyUniversity = "<div>Trường Đại Học Giao Thông Vận Tải PH tại TP. Hồ Chí Minh<br />Địa chỉ : 450-451 Lê Văn Việt Quận 9</div>";
+            var infoMyLocation = "<div>Nguyễn Mai Nghiêm<br />Tuổi : 21 <br />MSSV : 5951071063<br />Ngày sinh : 15-03-2000<br />Quê quán : Ninh Thuận<br />nghiemnguyen111555333@gmail.com <br />450 Lê Văn Việt Quận 9</div>";
+
+            var infoMyLocation = new google.maps.InfoWindow({
+                content: infoMyLocation
+            });
+            marker0.addListener("click", () => infoMyLocation.open(map, marker0));
+            var infoMyUniversity = new google.maps.InfoWindow({
+                content: infoMyUniversity
+            });
+            marker1.addListener("click", () => infoMyUniversity.open(map, marker1));     
+
+/*        var directionsService = new google.maps.directionsService;
+        directionsService.route(
+          {
+            origin: { lat: 10.843536, lng: 106.795197 },
+            destination:  { lat: 10.845808, lng: 106.794544 },
+            travelMode: 'WALKING'
+          },
+          function(result, status){
+              if (status == 'OK') {
+                //todo
+                directionsDisplay = new google.maps.DirectionsRenderer(
+                  {
+                    directions:result,
+                    map:map
+                  });
+                console.log(result);
+              }
+          }
+          );*/
+
+          var directionsService = new google.maps.DirectionsService();
+            var directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+          // function chi duong
+            function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+            directionsService.route(
+                {
+                    origin: mylocation,
+                    destination: myUniversity,
+                    travelMode: google.maps.TravelMode.WALKING,
+                },
+                (response, status) => {
+                    if (status === "OK") {
+                        directionsRenderer.setDirections(response);
+                    } else {window.alert("Directions request failed due to " + status);}});
+        }
+        calculateAndDisplayRoute(directionsService, directionsRenderer);
+      }
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&callback=initMap&libraries=&v=weekly"
+      async></script>
+  </body>
+</html>
